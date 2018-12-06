@@ -1,3 +1,4 @@
+
 /************************************************************************
  * Mario Star
  * toggle power to cycle in leds modes
@@ -14,7 +15,7 @@
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(NBLEDS, LEDPIN, NEO_GRB + NEO_KHZ800);
 
 #define CYCLETIME 60000
-#define NBSCENE 5
+#define NBSCENE 6
 int addr = 0;
 int val = 0 ;
 int playMode = 0;
@@ -24,6 +25,8 @@ void setup() {
   val = EEPROM.read(addr);
   playMode = val % NBSCENE ;
   val++;
+  if(val >= 255)
+    val = 0;
   EEPROM.write(addr, val);
   Serial.println(playMode);
   strip.begin();
@@ -45,6 +48,9 @@ void setup() {
     Star();
     break;
     case 4:
+    Yellow();
+    break;
+        case 5:
     Cycle();
     break;
     }
@@ -86,7 +92,7 @@ while (true)
     while ((actualTime-oldTime) < CYCLETIME)
   {
     for (int i =0 ; i < NBLEDS ; i++)
-    strip.setPixelColor(i, (int)(255*multiplier/1000), 255*multiplier/1000, 255*multiplier/1000);
+    strip.setPixelColor(i, (int)(255*multiplier/1000), 255*multiplier/1000,0);
     strip.show();
 
     delay(10);
@@ -146,6 +152,13 @@ void AlwaysOn()
     strip.show();
   
   }
+
+void Yellow()
+{
+   for (int i =0 ; i < NBLEDS ; i++)
+    strip.setPixelColor(i, 255,255,0);
+    strip.show();  
+  }
   
 void Pulse()
 {
@@ -161,7 +174,7 @@ void Pulse()
   {
     
     for (int i =0 ; i < NBLEDS ; i++)
-    strip.setPixelColor(i, (int)(255*multiplier/1000), 255*multiplier/1000, 255*multiplier/1000);
+    strip.setPixelColor(i, (int)(255*multiplier/1000), 255*multiplier/1000, 0);
     strip.show();
 
     delay(10);
